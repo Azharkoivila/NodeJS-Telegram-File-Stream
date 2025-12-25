@@ -14,13 +14,13 @@ module.exports = async function StreemData(client, target, fileName, job, { user
 
     // FetchMultipart OCI ID
     const uploadId = await getOciMulipartId(fileName);
+    if(!uploadId) throw new Error('cannot find multipartId please Check OCI');
     const parts = [];
     let partNum = 1;
-    console.log("ooooh... Igot Multipart Commit id :", uploadId)
     await job.updateProgress({ user_id, progress: 'Upload Started' });
     for await (const chunk of client.iterDownload({
       file: target,
-      requestSize: 1 * 1024 * 1024,
+      requestSize: 1 * 1024 * 1024,   // define chunk you want
     })) {
       // fs.appendFileSync(`img${Date.now()}.jpeg`, chunk);    if you want write directly todisk 
       // iterfetch and upload
@@ -44,6 +44,7 @@ module.exports = async function StreemData(client, target, fileName, job, { user
     const par = await genaratePAR(fileName);
     return `${process.env.OCI_BASE_PAR_URL}${par.preauthenticatedRequest.accessUri}`;
   } catch (error) {
-    console.log("error in file streem", error)
+    console.log("error in file streem", error);
+    process.exit(1);
   }
 }
