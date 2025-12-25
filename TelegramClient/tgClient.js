@@ -13,6 +13,7 @@ const workerConnection = new IORedis({
   port: process.env.REDIS_PORT || 6379,
   password: process.env.REDIS_PASSWORD || undefined,
   maxRetriesPerRequest: null,
+  tls: {} // if required for redis or valkey sertificate issue
 });
 // TELEGRAM SESSION
 const stringSession = new StringSession(process.env.SESSION_ID); // fill this later with the value from session.save()
